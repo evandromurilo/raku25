@@ -44,7 +44,7 @@ sub opponent(Str $who) {
 
 sub play-game(Str $pos, &cur-strat, &next-strat, Str $who) {
     if (has-won($pos, opponent($who))) {
-	opponent($who) ~ " wins the game \n" ~ $pos;
+	opponent($who) ~ " wins the game " ~ $pos;
     } elsif (is-tie($pos)) {
 	"tie " ~ $pos;
     } else {
@@ -60,7 +60,10 @@ multi sub MAIN(Str $pos) {
 }
 
 multi sub MAIN() {
-    say play-game("---------", &dumb-strat, &dumb-strat, "x");
+    my $result = play-game("---------", &dumb-strat, &dumb-strat, "x");
+    say $result;
+    my $board = ($result ~~ / .*\h(<[xo-]>.*)$ /)[0].Str;
+    show-pos $board;
 }
 
 multi sub MAIN("opponent", Str $who) {
