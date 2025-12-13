@@ -30,11 +30,41 @@ sub is-tie(Str $pos) {
     and not $pos ~~ /"-"/;
 }
 
+sub dumb-strat(Str $pos, Str $me) {
+    $pos.subst("-", $me);
+}
+
+sub opponent(Str $who) {
+    if $who == "o" {
+	"x";
+    } else {
+	"o";
+    }
+}
+
+sub play-game(Str $pos, &x-strat, &o-strat, Str $who) {
+    if (has-won($pos, opponent($who))) {
+	opponent($who) ~ " wins the game";
+    } elsif (is-tie($pos)) {
+	"tie";
+    } else {
+	if ($who == "o") {
+	    play-game(o-strat($pos, $who), &x-strat, &o-strat, "x");
+	} else {
+	    play-game(x-strat($pos, $who), &x-strat, &o-strat, "o");
+	}
+    }
+}
+
 multi sub MAIN(Str $pos) {
     show-pos($pos);
     say has-won($pos, "x");
     say is-tie($pos);
     say triplets($pos);
+}
+
+multi sub MAIN() {
+    say play-game("---------", &dumb-strat, &dumb-strat, "x");
 }
 
 #my $start-pos = '---------';
