@@ -35,24 +35,20 @@ sub dumb-strat(Str $pos, Str $me) {
 }
 
 sub opponent(Str $who) {
-    if $who == "o" {
+    if $who ~~ "o" {
 	"x";
     } else {
 	"o";
     }
 }
 
-sub play-game(Str $pos, &x-strat, &o-strat, Str $who) {
+sub play-game(Str $pos, &cur-strat, &next-strat, Str $who) {
     if (has-won($pos, opponent($who))) {
-	opponent($who) ~ " wins the game";
+	opponent($who) ~ " wins the game \n" ~ $pos;
     } elsif (is-tie($pos)) {
-	"tie";
+	"tie " ~ $pos;
     } else {
-	if ($who == "o") {
-	    play-game(o-strat($pos, $who), &x-strat, &o-strat, "x");
-	} else {
-	    play-game(x-strat($pos, $who), &x-strat, &o-strat, "o");
-	}
+	play-game(cur-strat($pos, $who), &next-strat, &cur-strat, opponent($who))
     }
 }
 
@@ -65,6 +61,10 @@ multi sub MAIN(Str $pos) {
 
 multi sub MAIN() {
     say play-game("---------", &dumb-strat, &dumb-strat, "x");
+}
+
+multi sub MAIN("opponent", Str $who) {
+    say opponent($who);
 }
 
 #my $start-pos = '---------';
