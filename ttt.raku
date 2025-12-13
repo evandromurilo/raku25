@@ -34,6 +34,13 @@ sub dumb-strat(Str $pos, Str $me) {
     $pos.subst("-", $me);
 }
 
+sub interactive-strat(Str $pos, Str $me) {
+    show-pos($pos);
+    my $play = prompt("Your turn " ~ $me ~ ": ").Int;
+
+    $pos.substr(0, $play-1) ~ $me ~ $pos.substr($play);
+}
+
 sub opponent(Str $who) {
     if $who ~~ "o" {
 	"x";
@@ -60,7 +67,7 @@ multi sub MAIN(Str $pos) {
 }
 
 multi sub MAIN() {
-    my $result = play-game("---------", &dumb-strat, &dumb-strat, "x");
+    my $result = play-game("---------", &dumb-strat, &interactive-strat, "x");
     say $result;
     my $board = ($result ~~ / .*\h(<[xo-]>.*)$ /)[0].Str;
     show-pos $board;
