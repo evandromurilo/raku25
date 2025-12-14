@@ -1,6 +1,10 @@
 # tic tac toe
+sub at(Str $str, $idx) {
+    $str.substr($idx, 1);
+}
+
 sub take-idx(Str $str, @idxs) {
-    (@idxs.map: { $str.substr($_, 1) }).join;
+    (@idxs.map: { at($str, $_) }).join;
 }
 
 sub thrice(Str $str) {
@@ -38,7 +42,16 @@ sub interactive-strat(Str $pos, Str $me) {
     show-pos($pos);
     my $play = prompt("Your turn " ~ $me ~ ": ").Int;
 
+    if not is-available($pos, $play) {
+	say("not available, try again");
+	return interactive-strat($pos, $me);
+    }
+
     $pos.substr(0, $play-1) ~ $me ~ $pos.substr($play);
+}
+
+sub is-available(Str $pos, $square) {
+    at($pos, $square-1) ~~ /"-"/;
 }
 
 sub opponent(Str $who) {
