@@ -9,9 +9,9 @@ sub dedup(Str $content) {
 	    take $_ unless $_ ~~ $prev;
 	    $prev = $_;
 	}
-    };
+    }.join("\n")
 }
 
 multi sub MAIN(Str $in) {
-    .say for dedup(slurp $in);
+    say dedup(slurp $in);
 }
