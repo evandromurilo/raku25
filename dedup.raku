@@ -1,12 +1,12 @@
 sub dedup(Str $content) {
-    my $lines = $content.lines.list;
-    my $prev = $lines.first;
-    my $tail = $lines.tail({ $_ - 1});
+    my @lines = $content.lines;
+    my $prev = @lines.first;
+    my @tail = @lines.tail({ $_ - 1});
 
     gather {
 	take $prev;
 	
-	for $tail.list {
+	for @tail {
 	    take $_ unless $_ ~~ $prev;
 	    $prev = $_;
 	}
@@ -14,6 +14,5 @@ sub dedup(Str $content) {
 }
 
 multi sub MAIN(Str $in) {
-    my $contents = slurp $in;
-    .say for dedup($contents);
+    .say for dedup(slurp $in);
 }
