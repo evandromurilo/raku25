@@ -1,5 +1,8 @@
 sub dedup(Str $content) {
     my @lines = $content.lines;
+
+    return $content if @lines.elems == 0;
+    
     my $prev = @lines.first;
 
     gather {
