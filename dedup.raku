@@ -5,7 +5,7 @@ sub dedup(Str $content) {
     gather {
 	take $prev;
 	
-	for @lines.tail({ $_ - 1}) {
+	for @lines.skip(1) {
 	    take $_ unless $_ ~~ $prev;
 	    $prev = $_;
 	}
